@@ -3,6 +3,8 @@ from telegram import Update
 import logging
 from environs import Env
 from google.cloud import dialogflow
+from json import loads
+
 
 env=Env()
 env.read_env()
@@ -26,8 +28,32 @@ def detect_intent_texts(update: Update, context: CallbackContext, project_id=PRO
     text_input = dialogflow.TextInput(text=update.message.text, language_code="ru")
     query_input = dialogflow.QueryInput(text=text_input)
     response = session_client.detect_intent(request={"session": session, "query_input": query_input})
-    print(response)
     context.bot.send_message(chat_id=update.effective_chat.id, text=response.query_result.fulfillment_text)
+
+
+def create_intent(project_id):
+    with open("questions.json", "r", encoding="utf-8") as my_file:
+        questions = my_file.read()
+
+    questions = loads(questions)
+    intent_name = "Устройство на работу"
+    training_phrases_parts = questions[intent_name]["questions"]
+    answer = questions[intent_name]["answer"]
+    intents_client = dialogflow.IntentsClient()
+    parent = dialogflow.AgentsClient.agent_path(project_id)
+    training_phrases = []
+
+    for training_phrases_part in training_phrases_parts:
+        part = dialogflow.Intent.TrainingPhrase.Part(text=training_phrases_part)
+        # Here we create a new training phrase for each provided part.
+        training_phrase = dialogflow.Intent.TrainingPhrase(parts=[part])
+        training_phrases.append(training_phrase)
+
+    text = dialogflow.Intent.Message.Text(text=[answer])
+    message = dialogflow.Intent.Message(text=text)
+
+    intent = dialogflow.Intent(display_name=intent_name, training_phrases=training_phrases, messages=[message])
+    response = intents_client.create_intent(request={"parent": parent, "intent": intent})
 
 
 def main() -> None:
