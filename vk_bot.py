@@ -13,14 +13,7 @@ GOOGLE_APPLICATION_CREDENTIALS = env("GOOGLE_APPLICATION_CREDENTIALS")
 PROJECT_ID = env("PROJECT_ID")
 
 
-def echo(event, vk_api):
-    vk_api.messages.send(
-        user_id=event.user_id,
-        message=event.text,
-        random_id=random.randint(1,1000)
-    )
-
-def detect_intent_texts(project_id, session_id, event_text):
+def detect_intent_texts(project_id, session_id, event_text, vk_api):
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
     text_input = dialogflow.TextInput(text=event_text, language_code="ru")
@@ -38,4 +31,4 @@ if __name__ == "__main__":
     longpoll = VkLongPoll(vk_session)
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            detect_intent_texts(PROJECT_ID, VK_BOT_ID, event.text)
+            detect_intent_texts(PROJECT_ID, VK_BOT_ID, event.text, vk_api)

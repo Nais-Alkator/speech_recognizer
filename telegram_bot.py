@@ -8,6 +8,7 @@ from json import loads
 
 env=Env()
 env.read_env()
+
 TELEGRAM_BOT_TOKEN = env('TELEGRAM_BOT_TOKEN')
 TELEGRAM_ID = env("TELEGRAM_ID")
 GOOGLE_APPLICATION_CREDENTIALS = env("GOOGLE_APPLICATION_CREDENTIALS")
@@ -43,7 +44,6 @@ def create_intent(project_id):
 
     for training_phrases_part in training_phrases_parts:
         part = dialogflow.Intent.TrainingPhrase.Part(text=training_phrases_part)
-        # Here we create a new training phrase for each provided part.
         training_phrase = dialogflow.Intent.TrainingPhrase(parts=[part])
         training_phrases.append(training_phrase)
 
@@ -54,7 +54,7 @@ def create_intent(project_id):
     response = intents_client.create_intent(request={"parent": parent, "intent": intent})
 
 
-def main() -> None:
+if __name__ == "__main__":
     updater = Updater(token=TELEGRAM_BOT_TOKEN)
     dispatcher = updater.dispatcher
     start_handler = CommandHandler('start', start)
@@ -62,7 +62,3 @@ def main() -> None:
     response_handler = MessageHandler(Filters.text & (~Filters.command), detect_intent_texts)
     dispatcher.add_handler(response_handler)
     updater.start_polling()
-
-
-if __name__ == "__main__":
-    main()
