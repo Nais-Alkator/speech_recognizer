@@ -28,7 +28,7 @@ if __name__ == "__main__":
     logger.setLevel(logging.DEBUG)
     logger.addHandler(TelegramLogsHandler(telegram_id, telegram_bot_token))
     logger.info("Бот ВКонтакте запущен")
-    
+
     try:
         vk_session = vk.VkApi(token=vk_bot_token)
         vk_api = vk_session.get_api()
