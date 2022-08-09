@@ -15,10 +15,7 @@ def start(update: Update, context: CallbackContext):
 
 def send_tg_message(update: Update, context: CallbackContext):
     response = detect_intent_texts(update.message.text, telegram_user_id)
-    if response.query_result.intent.is_fallback:
-        return None
-    else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=response.query_result.fulfillment_text)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response.query_result.fulfillment_text)
 
 
 def main():
