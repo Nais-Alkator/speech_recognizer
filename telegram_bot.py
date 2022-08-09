@@ -8,6 +8,7 @@ from dialogflow_api import detect_intent_texts
 
 logger = logging.getLogger("Логер")
 
+
 def start(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
 
