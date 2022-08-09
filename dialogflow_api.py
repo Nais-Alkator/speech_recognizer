@@ -17,8 +17,8 @@ def detect_intent_texts(text, session_id):
 
 
 def create_intent(project_id):
-    with open("questions.json", "r", encoding="utf-8") as my_file:
-        questions = my_file.read()
+    with open("questions.json", "r", encoding="utf-8") as questions:
+        questions = questions.read()
 
     questions = json.loads(questions)
     intent_name = "Устройство на работу"
