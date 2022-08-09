@@ -11,9 +11,7 @@ logger = logging.getLogger("Логер")
 
 def send_vk_message(text, vk_api, vk_bot_id):
     response = detect_intent_texts(text, vk_bot_id)
-    if response.query_result.intent.is_fallback:
-        return None
-    else:
+    if not response.query_result.intent.is_fallback:
         vk_api.messages.send(user_id=event.user_id, message=response.query_result.fulfillment_text,
                              random_id=random.randint(1,1000))
 
