@@ -25,10 +25,9 @@ def main():
     env = Env()
     env.read_env()
     telegram_bot_token = env('TELEGRAM_BOT_TOKEN')
-    telegram_id = env("TELEGRAM_ID")
-
+    telegram_user_id = env("TELEGRAM_USER_ID")
     logger.setLevel(logging.DEBUG)
-    logger.addHandler(TelegramLogsHandler(telegram_id, telegram_bot_token))
+    logger.addHandler(TelegramLogsHandler(telegram_user_id, telegram_bot_token))
     logger.info("Бот Телеграм запущен")
 
     try:

@@ -2,14 +2,14 @@ from google.cloud import dialogflow
 from environs import Env
 import json
 
+env = Env()
+env.read_env()
+project_id = env("PROJECT_ID")
+telegram_user_id = env("TELEGRAM_USER_ID")
 
 def detect_intent_texts(text):
-    env = Env()
-    env.read_env()
-    project_id = env("PROJECT_ID")
-    telegram_id = env("TELEGRAM_ID")
     session_client = dialogflow.SessionsClient()
-    session = session_client.session_path(project_id, telegram_id)
+    session = session_client.session_path(project_id, telegram_user_id)
     text_input = dialogflow.TextInput(text=text, language_code="ru")
     query_input = dialogflow.QueryInput(text=text_input)
     response = session_client.detect_intent(request={"session": session, "query_input": query_input})
