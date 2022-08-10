@@ -14,7 +14,7 @@ def start(update: Update, context: CallbackContext):
 
 
 def send_tg_message(update: Update, context: CallbackContext):
-    response = detect_intent_texts(update.message.text, telegram_user_id)
+    response = detect_intent_texts(update.message.text, project_id, telegram_user_id)
     context.bot.send_message(chat_id=update.effective_chat.id, text=response.query_result.fulfillment_text)
 
 
@@ -37,6 +37,7 @@ def main():
 if __name__ == "__main__":
     env = Env()
     env.read_env()
-    telegram_bot_token = env('TELEGRAM_BOT_TOKEN')
+    telegram_bot_token = env("TELEGRAM_BOT_TOKEN")
     telegram_user_id = env("TELEGRAM_USER_ID")
+    project_id = env("PROJECT_ID")
     main()

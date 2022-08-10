@@ -3,13 +3,7 @@ from environs import Env
 import json
 
 
-env = Env()
-env.read_env()
-project_id = env("PROJECT_ID")
-telegram_user_id = env("TELEGRAM_USER_ID")
-
-
-def detect_intent_texts(text, session_id):
+def detect_intent_texts(text, project_id, session_id):
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
     text_input = dialogflow.TextInput(text=text, language_code="ru")
@@ -23,12 +17,10 @@ def create_intents(project_id):
         questions = questions.read()
 
     questions = json.loads(questions)
-    for question in questions:
-        intent_name = question
-        if intent_name == "Устройство на работу":
-            continue
-        training_phrases_parts = questions[intent_name]["questions"]
-        answer = questions[intent_name]["answer"]
+    for question in questions.items():
+        intent_name, context = question
+        training_phrases_parts = context["questions"]
+        answer = context["answer"]
         intents_client = dialogflow.IntentsClient()
         parent = dialogflow.AgentsClient.agent_path(project_id)
         training_phrases = []
